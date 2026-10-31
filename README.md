@@ -1,7 +1,7 @@
-# WilliamMidterm — 2D Game Project
+# WilliamMidterm 2D Game Project
 
 <div align="center">
-  <img src="docs/render.gif.gif" alt="WilliamMidterm Gameplay" width="800">
+  <img src="./docs/render.gif" alt="WilliamMidterm Gameplay" width="800">
   <p><em>Gameplay demonstration</em></p>
 </div>
 
