@@ -1,337 +1,463 @@
+# WilliamMidterm — 2D Game Project
+
 <div align="center">
-
-<h1>Raylib Project Template</h1>
-
-<p><strong>A clean, portable C++20 game project template built on Raylib and Premake.</strong></p>
-
-<p>
-  <img alt="C++20" src="https://img.shields.io/badge/C%2B%2B-20-00599C?style=for-the-badge&logo=cplusplus&logoColor=white">
-  <img alt="Raylib 6.0" src="https://img.shields.io/badge/Raylib-6.0-1E1E1E?style=for-the-badge">
-  <img alt="Premake 5.0" src="https://img.shields.io/badge/Premake-5.0-6E4C9E?style=for-the-badge">
-  <img alt="Visual Studio 2026" src="https://img.shields.io/badge/Visual%20Studio-2026-5C2D91?style=for-the-badge">
-</p>
-
-<p>
-  <img alt="Windows: supported" src="https://img.shields.io/badge/Windows-supported-2EA44F?style=flat-square">
-  <img alt="macOS: planned" src="https://img.shields.io/badge/macOS-planned-DBAB09?style=flat-square">
-  <img alt="Raylib license: zlib" src="https://img.shields.io/badge/Raylib%20license-zlib-informational?style=flat-square">
-</p>
-
-<p>
-  <a href="#quick-start">Quick Start</a> ·
-  <a href="#project-structure">Structure</a> ·
-  <a href="#how-the-build-works">How It Works</a> ·
-  <a href="#starting-a-new-game">New Game</a> ·
-  <a href="#troubleshooting">Troubleshooting</a> ·
-  <a href="#roadmap">Roadmap</a>
-</p>
-
+  <img src="docs/render.gif.gif" alt="WilliamMidterm Gameplay" width="800">
+  <p><em>Gameplay demonstration</em></p>
 </div>
 
 ---
 
 ## Overview
 
-RaylibTemplate is a starting point for 2D and 3D games written in **C++20** with **[Raylib](https://www.raylib.com)**. Instead of shipping prebuilt binaries or Visual Studio files, the repository contains only source code and a **Premake** build description. Project files are generated on demand, and Raylib is compiled from source as part of the workspace.
+**WilliamMidterm** is a 2D game project developed in **C++20** using the **Raylib** library for graphics, window management, and input handling.
 
-**Why this matters**
+The project is built using **Premake5**, which generates Visual Studio solution and project files. It follows a modular directory structure that separates game source code, header files, external dependencies, and compiled binaries.
 
-| | |
+The main goal of this repository is to provide a structured environment for developing, building, debugging, and extending a 2D game application.
+
+## Technologies
+
+| Technology | Description |
 |---|---|
-| **No prebuilt binaries** | Raylib is built by your own compiler, with your own Debug/Release configuration. |
-| **No generated files in Git** | Solutions and project files are regenerated from `Build.lua` at any time. |
-| **No machine-specific paths** | Every path is relative. Clone the repository anywhere and it builds. |
-| **One command to set up** | Clone, generate, open, run. Nothing to install besides Premake and a compiler. |
-| **Clean separation** | Your game, the vendored library, generated project files, and build output each live in their own folder. |
-
----
-
-## Requirements
-
-| Tool | Version | Notes |
-|---|---|---|
-| **Windows** | 10 or 11 | macOS support is planned (see [Roadmap](#roadmap)) |
-| **Visual Studio** | 2026 | Install the **Desktop development with C++** workload |
-| **Premake** | 5.0 | `premake5.exe` must be on your `PATH`. Download from the [Premake releases](https://github.com/premake/premake-core/releases) |
-| **Git** | any recent | Only needed to clone |
-
-Raylib does **not** need to be installed. Its source is included in `Vendor/raylib/`.
-
-Verify Premake before you start:
-
-```
-premake5 --version
-```
-
----
-
-## Quick Start
-
-**1. Clone the repository**
-
-```
-git clone https://github.com/<your-username>/RaylibTemplate.git
-cd RaylibTemplate
-```
-
-No `--recursive` flag is needed: Raylib is vendored directly, not added as a submodule.
-
-**2. Generate the Visual Studio solution**
-
-```
-premake5 --file=Build.lua vs2026
-```
-
-> [!IMPORTANT]
-> The root build script is named `Build.lua`, not `premake5.lua`, so the `--file=Build.lua` argument is required every time.
-
-**3. Open the solution**
-
-```
-build/RaylibTemplate.slnx
-```
-
-**4. Build and run**
-
-Select `Debug` or `Release`, keep the platform on `x64`, and press **F5**. `Game` is the startup project. Visual Studio builds `Raylib` first, then links it into `Game`, and a window opens.
-
----
+| C++20 | Primary programming language |
+| Raylib | Graphics and game development framework |
+| Premake5 | Build system and project generation |
+| Visual Studio 2022 | IDE and debugger |
+| Git | Version control |
+| Windows x64 | Target development platform |
 
 ## Project Structure
 
-```
-RaylibTemplate/
-├── Build.lua                   Root build script: workspace + Game project
-├── README.md
-├── .gitignore
+```text
+Midterm_2D/
 │
-├── Game/                       Your game
-│   ├── src/                    .cpp files (subfolders allowed)
-│   └── include/                .h files
+├── assets/
+│   └── gameplay.gif
 │
-├── Vendor/                     Third-party code, never edited by hand
+├── Binaries/
+│   ├── Intermediates/
+│   │   └── windows-x86_64/
+│   │       ├── Debug/
+│   │       └── Release/
+│   │
+│   └── windows-x86_64/
+│       ├── Debug/
+│       │   ├── Game/
+│       │   └── Raylib/
+│       └── Release/
+│           ├── Game/
+│           └── Raylib/
+│
+├── build/
+│
+├── Game/
+│   ├── include/
+│   └── src/
+│
+├── Vendor/
 │   └── raylib/
-│       ├── Build-raylib.lua    Build script for the Raylib static library
-│       ├── LICENSE             Raylib's zlib license
-│       └── src/                Raylib 6.0 source, unchanged from upstream
+│       ├── Build-raylib.lua
+│       └── src/
+│           ├── external/
+│           │   ├── glfw/
+│           │   └── RGFW/
+│           └── platforms/
 │
-├── build/                      GENERATED: .slnx, .vcxproj files      (not in Git)
-└── Binaries/                   GENERATED: executables and libraries  (not in Git)
+├── build.lua
+├── .gitignore
+└── README.md
 ```
 
-| Folder | Created by | Committed | Safe to delete |
-|---|---|---|---|
-| `Game/` | You | Yes | No |
-| `Vendor/` | You (copied from upstream) | Yes | No |
-| `build/` | Premake | No | Yes, regenerate with Premake |
-| `Binaries/` | Compiler, archiver, linker | No | Yes, rebuild in Visual Studio |
+*This structure includes planned and generated directories. The `assets` folder is intended for the gameplay GIF.*
 
----
+### Directory Descriptions
 
-## How the Build Works
+**Game/src/**
 
-### From script to executable
+Contains the `.cpp` files implementing the game's functionality. This is where the main game logic and any additional gameplay systems are developed.
 
-```mermaid
-flowchart LR
-    A["Build.lua<br/>Build-raylib.lua"] -->|premake5 vs2026| B["build/<br/>RaylibTemplate.slnx<br/>Game.vcxproj<br/>Raylib.vcxproj"]
-    B -->|MSBuild| C["Raylib project<br/>7 .c files"]
-    B -->|MSBuild| D["Game project<br/>.cpp files"]
-    C -->|cl.exe| E["7 .obj files"]
-    E -->|lib.exe| F["Raylib.lib"]
-    D -->|cl.exe| G["main.obj, ..."]
-    G --> H{"link.exe"}
-    F --> H
-    I["opengl32.lib<br/>gdi32.lib<br/>winmm.lib"] --> H
-    H --> J["Game.exe"]
+**Game/include/**
+
+Contains the `.h` header files used for declarations, structures, classes, and shared functionality.
+
+**Vendor/raylib/**
+
+Contains the Raylib dependency, including its source code and platform-specific dependencies.
+
+**Binaries/**
+
+Stores compiled executable files and intermediate build artifacts. The output is separated by operating system, architecture, build configuration, and project.
+
+**build/**
+
+Stores Visual Studio solution and project files generated by Premake.
+
+**build.lua**
+
+Contains the Premake configuration used to define the workspace, project settings, source files, dependencies, and output directories.
+
+**assets/**
+
+Reserved for project media, including the gameplay GIF displayed at the top of this README.
+
+## Build System
+
+The project uses Premake5 to manage its build configuration.
+
+### Workspace Configuration
+
+```lua
+local OutputDir = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
+
+workspace "WilliamMidterm"
+    architecture "x86_64"
+    configurations {"Debug", "Release"}
+    startproject "Game"
+
+    targetdir ("Binaries/" .. OutputDir .. "/%{prj.name}")
+    objdir ("Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
+
+    location "build"
 ```
 
-**Premake runs once, before the build.** It only writes project files; it never compiles anything. Everything after that is Visual Studio's build system (MSBuild) driving the compiler (`cl.exe`), the archiver (`lib.exe`), and the linker (`link.exe`).
+The workspace is named `WilliamMidterm` and targets the x86_64 architecture.
 
-### The two projects
+Two build configurations are supported:
 
-| Project | Kind | Language | Produces | Defined in |
-|---|---|---|---|---|
-| **Raylib** | Static library | C | `Raylib.lib` | `Vendor/raylib/Build-raylib.lua` |
-| **Game** | Console application | C++20 | `Game.exe` | `Build.lua` |
+- **Debug:** Intended for development, debugging, and testing.
+- **Release:** Intended for optimized builds of the application.
 
-### How Raylib is compiled
+The `Game` project is configured as the startup project.
 
-Raylib is built **from source** as its own static library project. Its build script describes exactly what Raylib's own Makefile would do:
+### Game Configuration
 
-| Setting | Value | Purpose |
-|---|---|---|
-| Source files | the 7 top-level `src/*.c` modules | `rcore`, `rshapes`, `rtextures`, `rtext`, `rmodels`, `raudio`, `rglfw` |
-| Include directories | `src`, `src/external/glfw/include` | Raylib's headers and its bundled GLFW headers |
-| Defines | `PLATFORM_DESKTOP_GLFW` | Selects the desktop GLFW platform backend |
-| | `GRAPHICS_API_OPENGL_33` | Selects OpenGL 3.3 |
-
-> [!NOTE]
-> `rglfw.c` is a **unity build** of GLFW: it `#include`s GLFW's source files directly. Files under `src/external/` and `src/platforms/` must therefore **never** be added to the project. They are compiled through Raylib's own `.c` files, and compiling them separately would define symbols twice.
-
-### How Game uses Raylib
-
-| Need | Tool | Configuration |
-|---|---|---|
-| Find `raylib.h` | Preprocessor | `includedirs { "Vendor/raylib/src" }` |
-| Raylib's compiled code | Linker | `links { "Raylib" }` (a project reference, not a file path) |
-| Windows libraries Raylib calls | Linker | `opengl32`, `gdi32`, `winmm`, Windows only |
-| Correct link order | Linker | `implicitlink "Off"` (see [Troubleshooting](#lnk2005-closewindow-already-defined-in-user32lib)) |
-
-A static library does not carry its own dependencies. The system libraries Raylib needs are therefore linked by `Game`, the project that produces the final executable.
-
-### Output layout
-
-All projects inherit their output folders from the workspace, so every project follows the same pattern:
-
-```
-Binaries/<system>-<architecture>/<configuration>/<project>/
-Binaries/Intermediates/<system>-<architecture>/<configuration>/<project>/
+```lua
+project "Game"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++20"
 ```
 
-| File | Location |
-|---|---|
-| `Game.exe` (Debug) | `Binaries/windows-x86_64/Debug/Game/` |
-| `Raylib.lib` (Debug) | `Binaries/windows-x86_64/Debug/Raylib/` |
-| Object files (`.obj`) | `Binaries/Intermediates/windows-x86_64/<config>/<project>/` |
+The game is configured as a console application using C++20.
 
-Different operating systems, architectures, and configurations never overwrite each other's output.
+### Source Files
 
----
-
-## Starting a New Game
-
-1. **Copy the template.** Use GitHub's *Use this template* button, or clone and re-initialize Git.
-2. **Rename the workspace** in `Build.lua` (`workspace "RaylibTemplate"`) to your game's name. Do not name the game project `Raylib`; that name is taken by the library project.
-3. **Add your code** under `Game/src/` and `Game/include/`.
-4. **Regenerate** after adding, removing, or renaming files:
-
-   ```
-   premake5 --file=Build.lua vs2026
-   ```
-
-> [!WARNING]
-> Premake expands file patterns such as `Game/src/**.cpp` **when it runs**, not when you build. A file created after the last generation is invisible to Visual Studio until you regenerate. The typical symptom is an `LNK2019` unresolved symbol error for a function that clearly exists on disk.
-
-### Ground rules
-
-- **`Build.lua` is the source of truth.** Never change settings through Visual Studio's Property Pages: the next regeneration erases them, and they never reach other platforms.
-- **Never edit vendored code.** Everything under `Vendor/raylib/src/` stays exactly as shipped by Raylib.
-- **Include style:** `<raylib.h>` for external libraries, `"MyHeader.h"` for your own code.
-
----
-
-## Updating Raylib
-
-1. Download the new Raylib release.
-2. Replace **only** `Vendor/raylib/src/` and `Vendor/raylib/LICENSE`. Keep `Build-raylib.lua`.
-3. Open the new `src/Makefile` and confirm the default `PLATFORM` / `GRAPHICS` values and the Windows libraries still match `Build-raylib.lua` and `Build.lua`.
-4. Delete `build/` and `Binaries/`, regenerate, and rebuild.
-
----
-
-## Clean Rebuild
-
-Every generated file lives in two folders. To start from a completely clean state:
-
-```
-rmdir /s /q build Binaries
-premake5 --file=Build.lua vs2026
+```lua
+files {
+    "Game/src/**.cpp",
+    "Game/include/**.h"
+}
 ```
 
-Then rebuild the solution in Visual Studio.
+Premake includes C++ source files from `Game/src` and header files from `Game/include`, including files in nested directories.
 
----
+### Include Directories
+
+```lua
+includedirs {
+    "Vendor/raylib/src",
+    "Game/include"
+}
+```
+
+These directories allow the compiler to locate Raylib headers and the project's own header files.
+
+### Linking
+
+```lua
+links {"Raylib"}
+
+filter {"system:windows"}
+    links {"opengl32", "gdi32", "winmm"}
+
+implicitlink "Off"
+
+include "Vendor/raylib/Build-raylib.lua"
+```
+
+The project links Raylib alongside the required Windows system libraries.
+
+The external Raylib project is configured through `Build-raylib.lua`.
+
+## Installation and Setup
+
+### Requirements
+
+To build and run the project, you will need:
+
+- Windows 10 or Windows 11 (64-bit)
+- Visual Studio 2022 with Desktop Development with C++
+- Premake5
+- Git
+- The Raylib dependency included in the repository
+
+### Step 1 — Clone the Repository
+
+Open PowerShell or Git Bash and run:
+
+```bash
+git clone <REPOSITORY_URL>
+```
+
+Then navigate to the project directory:
+
+```bash
+cd Midterm_2D
+```
+
+Replace `<REPOSITORY_URL>` with the URL of this GitHub repository.
+
+If Raylib is tracked as a Git submodule, initialize it with:
+
+```bash
+git submodule update --init --recursive
+```
+
+### Step 2 — Generate the Visual Studio Solution
+
+From the root directory, run:
+
+```powershell
+premake5 --file=build.lua vs2022
+```
+
+Premake will generate the Visual Studio solution and project files inside the `build` directory.
+
+Make sure Premake5 is installed and accessible from your terminal.
+
+### Step 3 — Open the Solution
+
+Open:
+
+```text
+build/WilliamMidterm.sln
+```
+
+Visual Studio should load the workspace and its projects.
+
+### Step 4 — Configure the Build
+
+In Visual Studio:
+
+1. Select `Debug` or `Release`.
+2. Select the `x64` platform.
+3. Set `Game` as the startup project.
+4. Build the solution using `Ctrl + Shift + B`.
+
+The Raylib dependency and the game application should be compiled as part of the solution.
+
+### Step 5 — Run the Game
+
+After a successful build, press:
+
+```text
+Ctrl + F5
+```
+
+to run without debugging.
+
+Alternatively, press:
+
+```text
+F5
+```
+
+to run with the Visual Studio debugger.
+
+## Output Directories
+
+Compiled files are organized automatically according to the build configuration.
+
+### Debug Output
+
+```text
+Binaries/windows-x86_64/Debug/Game/
+```
+
+### Release Output
+
+```text
+Binaries/windows-x86_64/Release/Game/
+```
+
+### Intermediate Files
+
+```text
+Binaries/Intermediates/windows-x86_64/
+```
+
+This separation keeps compiled files organized and avoids mixing Debug and Release outputs.
+
+## Development
+
+The repository is structured to make development and maintenance easier.
+
+New game functionality should generally be implemented inside `Game/src`, with corresponding declarations placed inside `Game/include` when appropriate.
+
+Raylib provides functionality for common game development tasks, including:
+
+- Window creation and management
+- 2D graphics rendering
+- Keyboard and mouse input
+- Texture and image handling
+- Audio playback
+- Frame timing
+- Basic collision-related utilities
+
+The specific features used by this game depend on the implementation in its C++ source files.
+
+### Adding New Source Files
+
+To add a new component:
+
+1. Create a `.cpp` file inside `Game/src`.
+2. Create a corresponding `.h` file inside `Game/include` if needed.
+3. Include the header where necessary.
+4. Regenerate the Visual Studio solution if the new files are not recognized.
+5. Rebuild the project.
+
+The existing Premake file patterns are designed to include new source and header files automatically when the project is regenerated.
+
+## Git and Version Control
+
+Git is used to manage project changes and collaborate through GitHub.
+
+### Check Repository Status
+
+```bash
+git status
+```
+
+### Stage Changes
+
+```bash
+git add .
+```
+
+### Commit Changes
+
+```bash
+git commit -m "Update game implementation"
+```
+
+### Push Changes
+
+```bash
+git push
+```
+
+### Recommended Gitignore
+
+Generated binaries, intermediate files, and local Visual Studio settings should generally be excluded from version control.
+
+```gitignore
+# Generated build files
+Binaries/
+build/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+
+# Compiled files
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.tlog
+
+# Temporary files
+*.tmp
+*.log
+```
+
+Source files, build scripts, documentation, and required dependencies should remain available in the repository.
 
 ## Troubleshooting
 
-Identify the **stage** first: the error prefix tells you which tool failed.
+### Missing Visual Studio Solution
 
-| Prefix | Stage | Typical meaning |
-|---|---|---|
-| Lua error from `premake5` | Generation | The build script itself is broken |
-| `E####` | IntelliSense | Editor analysis only; may be stale. The build output decides |
-| `C####` | Compiler / preprocessor | A header, declaration, or syntax problem |
-| `LNK####` | Linker | Missing or duplicate definitions |
-| Error when launching | Runtime / debugger | The program could not start |
+If the solution file is missing, run:
 
-<details>
-<summary><strong>C1083: Cannot open include file: 'raylib.h'</strong></summary>
+```powershell
+premake5 --file=build.lua vs2022
+```
 
-<br>
+Make sure the command is executed from the directory containing `build.lua`.
 
-The preprocessor cannot find the header. Check that the `Game` project has `includedirs { "Vendor/raylib/src" }` in `Build.lua`, then regenerate. The path is relative to `Build.lua`, not to `Build-raylib.lua`. To see what the compiler actually receives, search `build/Game.vcxproj` for `AdditionalIncludeDirectories`.
+### Raylib Header Errors
 
-</details>
+Verify that the following directory exists:
 
-<details>
-<summary><strong>E1696: cannot open source file "raylib.h" (red squiggles only)</strong></summary>
+```text
+Vendor/raylib/src/
+```
 
-<br>
+Confirm that the Raylib headers are present and that the include directories in `build.lua` are correct.
 
-This is IntelliSense, not the compiler. If the build succeeds, IntelliSense is stale: close and reopen the solution.
+### Linker Errors
 
-</details>
+Check that the Raylib project compiles correctly and that the following libraries are linked on Windows:
 
-<details>
-<summary><strong>LNK2019: unresolved external symbol __imp_timeBeginPeriod (or similar)</strong></summary>
+```text
+opengl32
+gdi32
+winmm
+```
 
-<br>
+Also verify that the Raylib project is included in the generated solution.
 
-A Windows system library is missing from the link. Strip the `__imp_` prefix, look the function up on Microsoft Learn, and check the **Library** row at the bottom of the page. Add that library inside the `filter "system:windows"` block in `Build.lua`.
+### Application Does Not Launch
 
-</details>
+If the project compiles but does not run:
 
-<details>
-<summary><strong>LNK2005: CloseWindow already defined in user32.lib</strong></summary>
+1. Verify that `Game` is the startup project.
+2. Confirm that the correct build configuration is selected.
+3. Check the Visual Studio Output window for errors.
+4. Confirm that any required runtime assets are available.
+5. Try rebuilding the entire solution.
 
-<br>
+### New Files Are Not Visible in Visual Studio
 
-Both Raylib and the Windows API define a C function named `CloseWindow`. If `user32.lib` reaches the linker before `Raylib.lib`, both definitions get pulled in. The template prevents this with `implicitlink "Off"` in the `Game` project, which places `Raylib.lib` explicitly in the library list ahead of Visual Studio's default libraries.
+Regenerate the solution using Premake and reopen it.
 
-Do not "fix" this with `/FORCE:MULTIPLE`: the linker would then silently choose one of the two functions.
+```powershell
+premake5 --file=build.lua vs2022
+```
 
-</details>
+## Future Development
 
-<details>
-<summary><strong>LNK2019 for a function in a file that exists</strong></summary>
+The current project structure allows for further development and expansion.
 
-<br>
+Potential improvements include:
 
-The file was added after the last generation, so it is not part of the project. Regenerate with Premake and reload the solution.
+- Additional gameplay features
+- Better separation of game systems
+- More reusable C++ components
+- Improved rendering and visual effects
+- Audio integration
+- Additional input handling
+- Performance optimization
+- More extensive testing
 
-</details>
+## Credits
 
-<details>
-<summary><strong>"Build succeeded" but the debugger cannot find Game.exe</strong></summary>
+**Project Name:** WilliamMidterm
 
-<br>
+**Programming Language:** C++20
 
-The project contains no source files, so nothing was compiled or linked. Check the `files` patterns in `Build.lua`. In Solution Explorer, turn off **Show All Files**: that view shows files on disk, not files in the project.
+**Graphics Library:** [Raylib](https://www.raylib.com/)
 
-</details>
+**Build System:** [Premake5](https://premake.github.io/)
+
+**Development Environment:** Microsoft Visual Studio 2022
 
 ---
-
-## Roadmap
-
-- [ ] **Debug / Release settings:** debug symbols, optimization, and runtime library per configuration
-- [ ] **macOS support:** Xcode or Makefile generation, Apple framework linking, Objective-C handling for `rglfw.c`
-- [ ] **Assets:** an `assets/` folder and a working directory set for the debugger
-- [ ] **Warnings:** strict warning levels for game code (MSVC and Clang), kept separate from Raylib
-- [ ] **Generation scripts:** one-click `.bat` / `.sh` wrappers around the Premake command
-
----
-
-## Acknowledgements and Licenses
-
-- **[Raylib](https://github.com/raysan5/raylib)** by Ramon Santamaria and contributors, licensed under the **zlib/libpng license**. See [`Vendor/raylib/LICENSE`](Vendor/raylib/LICENSE).
-- **[GLFW](https://www.glfw.org)**, bundled inside Raylib, licensed under the **zlib/libpng license**.
-- **[Premake](https://premake.github.io)**, used to generate the project files (not included in this repository).
-
-The template's own code is provided under the license in this repository's `LICENSE` file. Choose and add one before publishing.
 
 <div align="center">
-<br>
-<sub>Built with Raylib · Generated with Premake · Compiled with MSVC</sub>
+  <strong>WilliamMidterm</strong>
+  <p>Built with C++20, Raylib, and Premake5.</p>
 </div>
